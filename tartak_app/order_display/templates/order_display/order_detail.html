@@ -1,0 +1,41 @@
+{% extends "order_display/base.html" %}
+{% block title %}Szczegóły zamówienia{% endblock %}
+
+{% block content %}
+  <h1>Szczegóły</h1>
+  {{order}}
+  {% for element in elements %}
+    <h2>
+        {{ element.name }}
+        {{ element.width }}
+        {{ element.height }}
+        {{ element.length }}
+    </h2>
+    <p class="date">
+      Published {{ order.publish }}
+    </p>
+    {% for element in order.element.all %}
+        {{element}}
+    {% endfor %}
+    <button id="show_form">Show form</button>
+    <div id = "new_element_form" style="display:none;">
+    <form action="/your-name/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+  {% endfor %}
+  
+<script>
+    document.getElementById("show_form").onclick = function() {show_form()};
+    function show_form() {
+        document.getElementById("new_element_form").style.display = "block";
+        document.getElementById("show_form").style.display = "none";
+    }
+</script>
+
+{% endblock %}
+
+
+

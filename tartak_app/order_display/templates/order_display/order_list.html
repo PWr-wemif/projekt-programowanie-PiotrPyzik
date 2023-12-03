@@ -1,9 +1,9 @@
 {% extends "order_display/base.html" %}
-{% block title %}My Blog{% endblock %}
+{% block title %}Lista zamówień{% endblock %}
 
 {% block content %}
 
-  <h1>My Blog</h1>
+  <h1>Lista Zamówień</h1>
   {% for order in orders %}
 
     <h2>
@@ -11,7 +11,7 @@
     {% comment %} <a href="{{ order.get_absolute_url }}"> {% endcomment %}
 
         {{ order.client }}
-
+        <a href={{ order.get_absolute_url }}>{{order.slug}}</a>
       </a>
 
     </h2>
@@ -23,7 +23,6 @@
     </p>
     {% for element in order.element.all %}
         {{element}}
-        l
     {% endfor %}
 
   {% endfor %}

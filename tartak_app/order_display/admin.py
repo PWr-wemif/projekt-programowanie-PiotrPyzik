@@ -5,7 +5,7 @@ from .models import Client, Order, Element
 
 @admin.register(Client)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name','phone_number', 'slug']
+    list_display = ['first_name', 'last_name', 'slug']
     search_fields = ['first_name', 'last_name']
     
 

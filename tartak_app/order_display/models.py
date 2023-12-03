@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from phonenumber_field.modelfields import PhoneNumberField
+from django.template.defaultfilters import slugify
+from unidecode import unidecode
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -11,10 +12,17 @@ class Client(models.Model):
     first_name = models.CharField(max_length=20,blank=True)
     last_name = models.CharField(max_length=20,blank=True)
     phone_number = models.IntegerField(blank = True)
-    slug = models.SlugField(max_length=255,blank=True)
+    slug = models.SlugField(max_length=255,blank=True, unique=True)
+    
+    
     def __str__(self):
         return self.last_name
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(f"{self.first_name}_{self.last_name}"))
+        super(Client, self).save(*args, **kwargs)
+
 
     
     

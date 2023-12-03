@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'order_display.apps.OrderDisplayConfig',
-    "phonenumber_field",
+    'phonenumber_field',
     'bootstrap5',
+    'unidecode',
 ]
 
 MIDDLEWARE = [

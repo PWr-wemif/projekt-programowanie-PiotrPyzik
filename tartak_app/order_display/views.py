@@ -15,6 +15,9 @@ def order_detail_view(request, order):
     if request.method == "POST":
         form = ElementForm(request.POST)
         if form.is_valid():
+            element = form.save(commit=False)
+            element.order = order
+            element.save()
             return redirect(order.get_absolute_url())
     else:
         form = ElementForm()
@@ -24,5 +27,4 @@ def order_detail_view(request, order):
     
 def client_detail_view(request, client):
     client = Client.objects.get(slug = client)
-    print("cipcia")
     pass

@@ -45,7 +45,7 @@ class Order(models.Model):
     slug = models.SlugField(max_length=255, blank=True)
     status = models.CharField(max_length=2,
                               choices=Status.choices,
-                              default=Status.DRAFT)
+                              default=Status.PUBLISHED)
     def __str__(self):
         return self.status
     
@@ -73,7 +73,7 @@ class Element(models.Model):
     height = models.FloatField(blank=True)
     length = models.FloatField(blank=True)
     count = models.IntegerField(blank=True)
-    total_volume = models.FloatField(blank=True)
+    volume = models.FloatField(blank=True)
     unit = models.CharField(max_length=3,
                               choices=Units.choices,
                               default=Units.M3)

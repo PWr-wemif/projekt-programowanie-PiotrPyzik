@@ -17,16 +17,16 @@
     {% for element in order.element.all %}
         {{element}}
     {% endfor %}
-    <button id="show_form">Show form</button>
-    <div id = "new_element_form" style="display:none;">
-    <form action="/your-name/" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit">
-    </form>
-    </div>
+
   {% endfor %}
-  
+  <button id="show_form">Show form</button>
+  <div id = "new_element_form" style="display:none;">
+  <form method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Submit">
+  </form>
+  </div>
 <script>
     document.getElementById("show_form").onclick = function() {show_form()};
     function show_form() {

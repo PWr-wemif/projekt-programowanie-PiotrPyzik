@@ -22,7 +22,7 @@ class PostAdmin(admin.ModelAdmin):
     
 @admin.register(Element)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['name', 'width','height', 'length', 'total_volume','order', 'unit']
+    list_display = ['name', 'width','height', 'length', 'volume', 'order', 'unit']
     search_fields = ['name', 'order']
     raw_id_fields = ['order']
     ordering = ['order']

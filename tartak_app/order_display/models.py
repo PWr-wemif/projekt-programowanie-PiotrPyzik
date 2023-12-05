@@ -46,6 +46,7 @@ class Order(models.Model):
     status = models.CharField(max_length=2,
                               choices=Status.choices,
                               default=Status.PUBLISHED)
+    adres = models.CharField(max_length=255, blank=True)
     def __str__(self):
         return self.status
     

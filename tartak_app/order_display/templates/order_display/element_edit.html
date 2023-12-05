@@ -1,0 +1,7 @@
+{% extends "order_display/base.html" %}
+{% load crispy_forms_tags %}
+<form method="post">
+    {% csrf_token %}
+    {% crispy element_form %}
+    <input type="submit" value="Submit">
+</form>

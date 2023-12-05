@@ -1,9 +1,20 @@
 {% extends "order_display/base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Szczegóły zamówienia{% endblock %}
 
 {% block content %}
   <h1>Szczegóły</h1>
+  <div id='order'>
   {{order}}
+  </div>
+  <button id="show_order_form">Edytuj szczegóły zamówienia</button>
+  <div id='order_form' style = "display:none";>
+    <form method="post">
+      {% csrf_token %}
+      {% crispy order_form %}
+      <input type="submit" value="Submit">
+  </form>
+  </div>
   {% for element in elements %}
     <h2>
         {{ element.name }}
@@ -16,26 +27,33 @@
     </p>
     {% for element in order.element.all %}
         {{element}}
+        <a href = {% url 'order_display:element_edit' element.slug %}> edytuj </a>
     {% endfor %}
 
   {% endfor %}
-  <button id="show_form">Show form</button>
+  <button id="show_element_form">dodaj element</button>
   <div id = "new_element_form" style="display:none;">
   <form method="post">
       {% csrf_token %}
-      {{ form }}
+      {% crispy element_form %}
       <input type="submit" value="Submit">
   </form>
   </div>
 <script>
-    document.getElementById("show_form").onclick = function() {show_form()};
-    function show_form() {
+    document.getElementById("show_order_form").onclick = function() {show_order_form()};
+    function show_order_form() {     
+        document.getElementById("order_form").style.display = "block";
+        document.getElementById("show_order_form").style.display = "none";
+    }
+    document.getElementById("show_element_form").onclick = function() {show_element_form()};
+    function show_element_form() {
         document.getElementById("new_element_form").style.display = "block";
         document.getElementById("show_form").style.display = "none";
     }
 </script>
 
 {% endblock %}
+
 
 
 

@@ -23,7 +23,7 @@ class ElementForm(forms.ModelForm):
             ),
             Row(
                 Column('count', css_class='form-group col-md-6 mb-0'),
-                Column('volume', css_class='form-group col-md-4 mb-0'),
+                Column('volume', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
             Submit('submit', 'Zatwierdź')

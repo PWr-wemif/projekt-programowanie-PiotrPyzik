@@ -4,7 +4,6 @@ dupsko ehhe
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {% crispy element_form %}
-        <input type="submit" value="Submit">
+        {% crispy login_form %}
     </form>
 {% endblock content %}

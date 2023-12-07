@@ -2,13 +2,17 @@ from django.shortcuts import render, redirect
 from .models import Element, Order, Client
 from .forms import ElementForm, OrderForm
 from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
     queryset = Order.published.all()
     context_object_name = 'orders'
     paginate_by = 3
     template_name = 'order_display/order_list.html'
-    
+
+@login_required(login_url='/login/')   
 def order_detail_view(request, order):
     order = Order.objects.get(slug=order)
     elements = order.element.all()
@@ -34,20 +38,22 @@ def order_detail_view(request, order):
 
     return render(request, 'order_display/order_detail.html', {"order":order,"elements":elements, "element_form": element_form,'order_form':order_form})
     
-    
+@login_required(login_url='/login/')
 def client_detail_view(request, client):
     client = Client.objects.get(slug = client)
     return render(request, 'order_display/order_detail.html')
 
+@login_required(login_url='/login/')
 def element_edit_view(request, element):
     element = Element.objects.get(slug = element)
-    
     if request.method=='POST':
-        element_form = ElementForm(request.POST)
+        element_form = ElementForm(request.POST, instance=element)
         if element_form.is_valid():
             element.save()
+            return redirect(element.order.get_absolute_url())
     else:
-        element_form = ElementForm()
+        element_form = ElementForm(instance=element)
+        
     return render(request, 'order_display/element_edit.html', {'element_form': element_form})
     
     

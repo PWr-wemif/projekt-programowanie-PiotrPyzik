@@ -2,31 +2,44 @@
 {% block title %}Lista zamówień{% endblock %}
 
 {% block content %}
-
-  <h1>Lista Zamówień</h1>
-  {% for order in orders %}
-
-    <h2>
-
-    {% comment %} <a href="{{ order.get_absolute_url }}"> {% endcomment %}
-
-        {{ order.client }}
-        <a href={{ order.get_absolute_url }}>{{order.slug}}</a>
-      </a>
-
-    </h2>
-
-    <p class="date">
-
-      Published {{ order.publish }}
-
-    </p>
-    {% for element in order.element.all %}
-        {{element}}
-    {% endfor %}
-
-  {% endfor %}
-
-
+<div class="event-schedule-area-two bg-color pad100">
+  <div class="container">
+      <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade active show" id="home" role="tabpanel">
+              <div class="table-responsive">
+                  <table class="table">
+                    {% for order in orders %}
+                      <tr class="inner-box">
+                          <th scope="row">
+                              <div class="event-date">
+                                  {{order.due}}
+                              </div>
+                          </th>
+                          <td>
+                              <div class="event-wrap">
+                                  <h3><a>{{ order.client }}</a></h3>
+                                  <div class="meta">
+                                      <div class="organizers">
+                                          <a>{{order.adres}}</a>
+                                      </div>
+                                      <div class="categories">
+                                          <a>{{order.status}}</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </td>
+                          <td>
+                              <div class="primary-btn">
+                                  <a class="btn btn-primary" href={% url 'order_display:order_detail' order.slug %}>Szczegóły</a>
+                              </div>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 {% endblock %}

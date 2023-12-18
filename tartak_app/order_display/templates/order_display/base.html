@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
   <title>{% block title %}{% endblock %}</title>
@@ -6,21 +7,73 @@
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+  <link rel="stylesheet" href="{% static 'css/list_css.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/navbar_css.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/order_detail.css' %}" type="text/css" />
 </head>
 <body>
 
-<div class="container">
-  <ul class="nav bg-info">
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/">HOME</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/members">MEMBERS</a>
-    </li>
-  </ul>
+	<nav class="navbar navbar-expand-lg navbar-dark p-3 bg-secondary" id="headerNav">
+    <div class="container-fluid">
+      <a class="navbar-brand d-block d-lg-none" href="#">
+        <img src="/static_files/images/logos/logo_2_white.png" height="80" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav mx-auto ">
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" aria-current="page" href="{% url "order_display:order_list" %}">Zamówienia</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" href="#">Archiwum</a>
+          </li>
+          <li class="nav-item d-none d-lg-block">
+            <a class="nav-link mx-2" href="#">
+              <img src="/static_files/images/logos/logo_2_white.png" height="80" />
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" href="#">Brudnopis</a>
+          </li>
+          {% comment %}  {% endcomment %}
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.username }}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item active" href="{% url 'users:logout' %}">Wyloguj</a></li>
+            </ul>
+          </li>
+          {%else%}
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" href="{% url 'users:login' %}">zaloguj</a>
+          </li>
+          {% endif %}
+          {% comment %}  {% endcomment %}
+        </ul>
+      </div>
+    </div>
+  </nav>
 
+
+
+{% comment %} ----------------------------------------   {% endcomment %}
+<div class="container">
+  {% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    {{ message }}
+  </div>
+</div>
+{% endfor %}
   {% block content %}
   {% endblock %}
+
+
 </div>
 </body>
 </html>

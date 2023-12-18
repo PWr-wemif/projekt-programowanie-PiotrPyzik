@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 from unidecode import unidecode
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -47,6 +48,7 @@ class Order(models.Model):
                               choices=Status.choices,
                               default=Status.PUBLISHED)
     adres = models.CharField(max_length=255, blank=True)
+    workers = models.ManyToManyField(User)
     def __str__(self):
         return self.status
     

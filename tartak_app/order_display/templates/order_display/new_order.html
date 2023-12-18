@@ -1,0 +1,10 @@
+{% extends "order_display/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Nowe zamówienie{% endblock %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {% crispy form %}
+</form>
+{%endblock content%}

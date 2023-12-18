@@ -8,6 +8,9 @@ class ElementForm(forms.ModelForm):
     class Meta:
         model=Element
         fields = ['element_form','name', 'width', 'height', 'length', 'count', 'volume', 'description']
+        widgets = {
+            'unit': forms.RadioSelect(),
+        }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,11 +24,6 @@ class ElementForm(forms.ModelForm):
                 Column('length', css_class='form-group col-md-4 mb-0'),
                 css_class='form-row'
             ),
-            Row(
-                Column('count', css_class='form-group col-md-6 mb-0'),
-                Column('volume', css_class='form-group col-md-6 mb-0'),
-                css_class='form-row'
-            ),
             Submit('submit', 'Zatwierdź')
         )
     
@@ -33,7 +31,10 @@ class OrderForm(forms.ModelForm):
     order_form = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     class Meta:
         model=Order
-        fields = ['order_form','client','status','due','adres']
+        fields = ['order_form','client','status','due','adres', 'workers']
+        widgets = {
+            'workers': forms.CheckboxSelectMultiple,
+        }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,6 +42,7 @@ class OrderForm(forms.ModelForm):
         self.helper.layout = Layout(
             'order_form',
             'adres',
+            'workers',
             Row(
                 Column('client', css_class='form-group col-md-4 mb-0'),
                 Column('status', css_class='form-group col-md-4 mb-0'),
@@ -49,3 +51,22 @@ class OrderForm(forms.ModelForm):
             ),
             Submit('submit', 'Zatwierdź')
         )
+        
+class SelectWorkersForm(forms.ModelForm):
+    select_worker_form = forms.BooleanField(widget=forms.HiddenInput, initial=True)
+    class Meta:
+        
+        model=Order
+        fields = ['workers']
+        widgets = {
+            'workers': forms.CheckboxSelectMultiple,
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            "select_worker_form",
+            'workers',
+            Submit('submit', 'Zatwierdź'),
+        )
+        

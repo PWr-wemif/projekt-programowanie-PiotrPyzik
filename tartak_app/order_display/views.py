@@ -4,6 +4,8 @@ from .forms import ElementForm, OrderForm
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+
 
 class OrderListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
@@ -55,5 +57,19 @@ def element_edit_view(request, element):
         element_form = ElementForm(instance=element)
         
     return render(request, 'order_display/element_edit.html', {'element_form': element_form})
+
+
+def new_order(request):
+    if request.method=='POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            messages.success(request, "utworzono nowe zamówienie")
+            order = form.save()
+            return redirect(order.get_absolute_url())
+        else:
+            messages.ERROR(request, "coś poszło nie tak")
+            return render(request, 'order_display/new_order.html', {'form': form})
+    form = OrderForm()
+    return render(request, 'order_display/new_order.html', {'form': form})
     
     

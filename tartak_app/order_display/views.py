@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Element, Order, Client
 from .forms import ElementForm, OrderForm
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.http import JsonResponse
 
 
 class OrderListView(LoginRequiredMixin, ListView):
@@ -71,5 +72,15 @@ def new_order(request):
             return render(request, 'order_display/new_order.html', {'form': form})
     form = OrderForm()
     return render(request, 'order_display/new_order.html', {'form': form})
+
+def test(request):
+    return render(request, 'order_display/searchbar.html')
+
+
+def show_searches(request):
     
-    
+    data = request.GET['search']
+    print(data)
+    searches = Client.objects.filter(first_name__startswith=data)
+    print(searches)
+    return JsonResponse({'searches':list(searches.values())})

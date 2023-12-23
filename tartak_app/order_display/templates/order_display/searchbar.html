@@ -1,0 +1,43 @@
+<nav class="navbar navbar-light bg-light">
+    <form class="form-inline">
+      <button class="btn btn-outline-success my-2 my-sm-0 search dropdown-toggle" type="submit">Search</button>
+    </form>
+  </nav>
+
+  <div class="dropdown">
+    <input class="form-control mr-sm-2 dropdown-toggle" type="search" placeholder="Search" aria-label="Search" id='searchbar'>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id = "dropdown">
+
+    </div>
+  </div>
+
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    setInterval(function(){
+      search = document.getElementById('searchbar').value;
+      if(search.length!=0){
+        $.ajax({
+          type:'GET',
+          url:"{% url 'order_display:show_searches' %}",
+          data: {"search":search},
+          success: function(response){
+            $("#dropdown").empty();
+            for(var key in response.searches){
+              console.log(response.searches[key].first_name);
+              var temp = "<a>"+response.searches[key].first_name+"</a></br>";
+              $("#dropdown").append(temp);
+            }
+          },
+          error: function(response){
+            console.log("huj");
+          },
+        });
+      }
+      else{
+        $("#dropdown").empty();
+      }
+    },1000);
+  });
+</script>

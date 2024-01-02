@@ -38,6 +38,7 @@ class Order(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
+        FINISHED = 'FI', 'Finished'
     client = models.ForeignKey(Client,
                                on_delete=models.CASCADE,
                                related_name='client')
@@ -71,6 +72,9 @@ class Element(models.Model):
         SZTUKI = 'szt'
         M3 = 'm3'
         MB = 'mb'
+    class Status(models.TextChoices):
+        DONE = 'zrobione'
+        IN_PROGRESS = 'do zrobienia'
     name = models.CharField(max_length=20, blank=True)
     width = models.FloatField(blank=True)
     height = models.FloatField(blank=True)
@@ -80,6 +84,9 @@ class Element(models.Model):
     unit = models.CharField(max_length=3,
                               choices=Units.choices,
                               default=Units.M3)
+    status = models.CharField(max_length = 12,
+                              choices = Status.choices,
+                              default = Status.IN_PROGRESS)
     description = models.TextField(blank = True)
     order = models.ForeignKey(Order,
                               on_delete=models.CASCADE,
@@ -92,6 +99,13 @@ class Element(models.Model):
         return reverse("order_display:order_detail", args=[self.slug])
     
     def save(self, *args, **kwargs):
+        if self.unit==self.Units.SZTUKI:
+            self.volume = self.width*self.height*self.length*self.count/1000000
+        elif self.unit==self.Units.MB:
+            self.volume = self.width*self.height*self.length*(self.length/self.count)/1000000
+        else:
+            self.volume = self.count
+            
         if not self.slug:
             if not Element.objects.all():
                 next_id = 1

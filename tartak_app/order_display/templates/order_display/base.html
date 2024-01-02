@@ -22,39 +22,39 @@
       </button>
   
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-       
         <ul class="navbar-nav mx-auto ">
-          <li class="nav-item">
-            <a class="nav-link mx-2 active" aria-current="page" href="{% url "order_display:order_list" %}">Zamówienia</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link mx-2 active" href="#">Archiwum</a>
-          </li>
-          <li class="nav-item d-none d-lg-block">
-            <a class="nav-link mx-2" href="#">
-              <img src="/static_files/images/logos/logo_2_white.png" height="80" />
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link mx-2 active" href="#">Brudnopis</a>
-          </li>
-          {% comment %}  {% endcomment %}
-          {% comment %} {%endif%} {% endcomment %}
-          {% if user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li><a class="dropdown-item active" href="{% url 'users:logout' %}">Wyloguj</a></li>
-            </ul>
-          </li>
-          {%else%}
-          <li class="nav-item">
-            <a class="nav-link mx-2 active" href="{% url 'users:login' %}">zaloguj</a>
-          </li>
+        {% if user.groups.all %}
+          {% for group in user.groups.all %}
+            {% if group.name == 'manager' %}
+          
+            <li class="nav-item">
+              <a class="nav-link mx-2 active" aria-current="page" href="{% url "order_display:order_list" %}">Zamówienia</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-2 active" href="#">Archiwum</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-2 active" href="#">Brudnopis</a>
+            </li>
+            <li class = "nav_item">
+              <input class="form-control mr-sm-2 dropdown-toggle " type="search" placeholder="Search" aria-label="Search" id='searchbar'>
+              <ul class="list-group position-absolute z-3" id = "dropdown">
+                
+              </ul>
+            </li>
           {% endif %}
-          {% comment %}  {% endcomment %}
+        {% endfor %}
+      {% endif%}
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item active" href="{% url 'users:logout' %}">Wyloguj</a></li>
+              </ul>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -78,4 +78,38 @@
 
 </div>
 </body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    setInterval(function(){
+      search = document.getElementById('searchbar').value;
+      if(search.length!=0){
+        $.ajax({
+          type:'GET',
+          url:"{% url 'order_display:show_searches' %}",
+          data: {"search":search},
+          success: function(response){
+            $("#dropdown").empty();
+            for(var key in response.searches){
+              console.log(response.searches[key].first_name);
+              var temp = `<a href = '${response.searches[key].slug}'><li class="list-group-item" style="z-index: 999;"> ${response.searches[key].first_name} ${response.searches[key].last_name} </li></a>`;
+              $("#dropdown").append(temp);
+            }
+          },
+          error: function(response){
+            console.log("huj");
+          },
+        });
+      }
+      else{
+        $("#dropdown").empty();
+      }
+    },1000);
+  });
+</script>
+
+
+
 </html>

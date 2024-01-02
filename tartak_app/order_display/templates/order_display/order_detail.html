@@ -50,8 +50,12 @@
                     <td>{{element.width}}x{{element.height}}x{{element.length}}</td>
                     <td>{{element.volume}}m3</td>
                     <td class = 'float-right'>
-                      <button type="submit" class="btn btn-warning float-right">Edytuj</button>
-                      <button type="submit" class="btn btn-danger ms-1 float-right">Zakończ</button>
+                      {% if element.status == element.Status.IN_PROGRESS %}
+                        <a href = "{% url 'order_display:element_edit' element.slug %}"><button class="btn btn-warning float-right">Edytuj</button></a>
+                        <a href = "{% url 'order_display:finnish_element' element.slug %}"><button class="btn btn-danger float-right">Zakończ</button></a>
+                      {% else %}
+                        <a href = "{% url 'order_display:finnish_element' element.slug %}"><button class="btn btn-secondary float-right">Cofnij zakończenie</button></a>
+                      {% endif %}
                     </td>
                   </tr>
                   {% endfor %}

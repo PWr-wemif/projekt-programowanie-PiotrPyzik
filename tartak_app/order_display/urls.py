@@ -10,4 +10,5 @@ urlpatterns = [
     path('nowe/', views.new_order, name = 'new_order'),
     path('test/', views.test, name = 'test'),
     path('show_searches/', views.show_searches, name='show_searches'),
+    path('finnish_element/<slug:element>', views.finnish_element, name='finnish_element'),
 ]

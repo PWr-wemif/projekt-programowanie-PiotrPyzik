@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import JsonResponse
-
+from django.db.models import Q
 
 class OrderListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
@@ -18,7 +18,7 @@ class OrderListView(LoginRequiredMixin, ListView):
 @login_required(login_url='/login/')   
 def order_detail_view(request, order):
     order = Order.objects.get(slug=order)
-    elements = order.element.all()
+    elements = order.element.all().order_by('status')
     if request.method == "POST":
         print("POST")
         if 'element_form' in request.POST:
@@ -81,6 +81,19 @@ def show_searches(request):
     
     data = request.GET['search']
     print(data)
-    searches = Client.objects.filter(first_name__startswith=data)
+    searches = Client.objects.filter(
+        Q(first_name__contains=data) | 
+        Q(last_name__contains=data)
+    )
     print(searches)
     return JsonResponse({'searches':list(searches.values())})
+
+
+def finnish_element(request, element):
+    element = Element.objects.get(slug = element)
+    if element.status == Element.Status.DONE:
+        element.status = Element.Status.IN_PROGRESS
+    else: 
+        element.status = Element.Status.DONE
+    element.save()
+    return redirect(element.order.get_absolute_url())

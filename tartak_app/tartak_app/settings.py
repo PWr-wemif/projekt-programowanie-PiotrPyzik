@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'unidecode',
     'worker_app',
+    'searchableselect',
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 

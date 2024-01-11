@@ -3,12 +3,27 @@
 
 {% block content %}
 <div class="event-schedule-area-two bg-color pad100">
+    <div id='order_info'>
+        <tr class="inner-box">
+          <th scope="row">
+          </th>
+          <td>
+              <div class="event-wrap">
+                  <h3><a>{{ client.first_name }} {{client.last_name}}</a></h3>
+                  <div class="meta">
+                      <div class="organizers">
+                          <a>tel. {{client.phone_number}}</a>
+                      </div>
+                  </div>
+              </div>
+          </td>
+        </tr>
+        </div>
   <div class="container">
       <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade active show" id="home" role="tabpanel">
               <div class="table-responsive">
                   <table class="table">
-                    <a href = "{% url 'order_display:new_order' %}"><button class="btn btn-success float-right">nowe zamówienie</button></a>
                     {% for order in orders %}
                       <tr class="inner-box">
                           <th scope="row">

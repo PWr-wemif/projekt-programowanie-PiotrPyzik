@@ -8,7 +8,8 @@ urlpatterns = [
     path('klient/<slug:client>/', views.client_detail_view, name = 'client_detail'),
     path('edit/<slug:element>', views.element_edit_view, name = 'element_edit'),
     path('nowe/', views.new_order, name = 'new_order'),
-    path('test/', views.test, name = 'test'),
     path('show_searches/', views.show_searches, name='show_searches'),
     path('finnish_element/<slug:element>', views.finnish_element, name='finnish_element'),
+    path('finnish_order/<slug:order>', views.finnish_order, name='finnish_order'),
+    path('archiwum/', views.Archive.as_view(), name ="archiwum"),
 ]

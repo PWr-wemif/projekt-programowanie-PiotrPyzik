@@ -3,8 +3,43 @@
 {% block title %}Nowe zamówienie{% endblock %}
 {% block content %}
 
-<form method="post">
+<form method="POST">
     {% csrf_token %}
+    {% crispy client_form %}
     {% crispy form %}
+    <input type="Submit">
 </form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    setInterval(function(){
+      search = document.getElementById('id_first_name').value;
+      console.log(search)
+      if(search.length!=0){
+        $.ajax({
+          type:'GET',
+          url:"{% url 'order_display:show_searches' %}",
+          data: {"search":search},
+          success: function(response){
+            $("#div_id_first_name").empty();
+            for(var key in response.searches){
+              console.log(response.searches[key].first_name);
+              var temp = `<a href = http://127.0.0.1:8000/zamowienia/klient/${response.searches[key].slug}>${response.searches[key].first_name} ${response.searches[key].last_name}</a>`;
+              $("#div_id_first_name").append(temp);
+            }
+          },
+          error: function(response){
+            console.log("huj");
+          },
+        });
+      }
+      else{
+        $("#div_id_first_name").empty();
+      }
+    },1000);
+  });
+</script>
+
+
 {%endblock content%}

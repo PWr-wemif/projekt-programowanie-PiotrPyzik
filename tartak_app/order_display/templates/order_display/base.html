@@ -31,7 +31,7 @@
               <a class="nav-link mx-2 active" aria-current="page" href="{% url "order_display:order_list" %}">Zamówienia</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link mx-2 active" href="#">Archiwum</a>
+              <a class="nav-link mx-2 active" href="{% url "order_display:archiwum" %}">Archiwum</a>
             </li>
             <li class="nav-item">
               <a class="nav-link mx-2 active" href="#">Brudnopis</a>
@@ -94,7 +94,7 @@
             $("#dropdown").empty();
             for(var key in response.searches){
               console.log(response.searches[key].first_name);
-              var temp = `<a href = '${response.searches[key].slug}'><li class="list-group-item" style="z-index: 999;"> ${response.searches[key].first_name} ${response.searches[key].last_name} </li></a>`;
+              var temp = `<a href = http://127.0.0.1:8000/zamowienia/klient/${response.searches[key].slug}><li class="list-group-item" style="z-index: 999;"> ${response.searches[key].first_name} ${response.searches[key].last_name} </li></a>`;
               $("#dropdown").append(temp);
             }
           },

@@ -70,9 +70,17 @@
                   </div>
             </div>
           </div>
+          <td class = 'float-right'>
+            {% if order.status == order.Status.PUBLISHED %}
+              <a href = "{% url 'order_display:finnish_order' order.slug %}"><button class="btn btn-danger float-right">Zakończ zamówienie</button></a>
+            {% else %}
+              <a href = "{% url 'order_display:finnish_order' order.slug %}"><button class="btn btn-secondary float-right">Cofnij zakończenie zamówienia</button></a>
+            {% endif %}
+          </td>
         </div>
       </div>
     </div>
+
   </section>
   {% comment %}  {% endcomment %}
 <script>

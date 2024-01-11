@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .models import Element, Order, Client
-from .forms import ElementForm, OrderForm
+from .forms import ElementForm, OrderForm, ClientForm
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,7 +20,6 @@ def order_detail_view(request, order):
     order = Order.objects.get(slug=order)
     elements = order.element.all().order_by('status')
     if request.method == "POST":
-        print("POST")
         if 'element_form' in request.POST:
             element_form = ElementForm(request.POST)
             order_form = OrderForm()
@@ -44,7 +43,8 @@ def order_detail_view(request, order):
 @login_required(login_url='/login/')
 def client_detail_view(request, client):
     client = Client.objects.get(slug = client)
-    return render(request, 'order_display/order_detail.html')
+    orders = client.order.all()
+    return render(request, 'order_display/client.html', context={"client":client, "orders": orders})
 
 @login_required(login_url='/login/')
 def element_edit_view(request, element):
@@ -63,30 +63,36 @@ def element_edit_view(request, element):
 def new_order(request):
     if request.method=='POST':
         form = OrderForm(request.POST)
-        if form.is_valid():
+        client_form = ClientForm(request.POST)
+        if form.is_valid() and client_form.is_valid():
             messages.success(request, "utworzono nowe zamówienie")
-            order = form.save()
+            order = form.save(commit=False)
+            client = client_form.save(commit=False)
+            if client.first_name or client.last_name or client.phone_number:
+                client.save()
+                order.client = client
+                print(order.client)
+            order.save()
             return redirect(order.get_absolute_url())
         else:
-            messages.ERROR(request, "coś poszło nie tak")
-            return render(request, 'order_display/new_order.html', {'form': form})
+            if client_form.is_valid():
+                print('chuj')
+            messages.error(request, "coś poszło nie tak")
+            return render(request, 'order_display/new_order.html', {'form': form, "client_form":client_form})
     form = OrderForm()
-    return render(request, 'order_display/new_order.html', {'form': form})
-
-def test(request):
-    return render(request, 'order_display/searchbar.html')
+    client_form = ClientForm()
+    return render(request, 'order_display/new_order.html', {'form': form, "client_form":client_form})
 
 
 def show_searches(request):
-    
     data = request.GET['search']
     print(data)
     searches = Client.objects.filter(
         Q(first_name__contains=data) | 
         Q(last_name__contains=data)
     )
-    print(searches)
-    return JsonResponse({'searches':list(searches.values())})
+    searches = list(searches.values())
+    return JsonResponse({'searches':searches})
 
 
 def finnish_element(request, element):
@@ -97,3 +103,20 @@ def finnish_element(request, element):
         element.status = Element.Status.DONE
     element.save()
     return redirect(element.order.get_absolute_url())
+
+def finnish_order(request, order):
+    order = Order.objects.get(slug = order)
+    if order.status == Order.Status.PUBLISHED:
+        order.status = Order.Status.FINISHED
+    else: 
+        order.status = Order.Status.PUBLISHED
+    order.save()
+    return redirect(order.get_absolute_url())
+
+
+class Archive(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    queryset = Order.objects.filter(status = Order.Status.FINISHED)
+    context_object_name = 'orders'
+    template_name = 'order_display/order_list.html'
+    

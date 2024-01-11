@@ -16,7 +16,6 @@ class Client(models.Model):
     phone_number = models.IntegerField(blank = True)
     slug = models.SlugField(max_length=255,blank=True, unique=True)
     
-    
     def __str__(self):
         return self.last_name
     
@@ -41,9 +40,10 @@ class Order(models.Model):
         FINISHED = 'FI', 'Finished'
     client = models.ForeignKey(Client,
                                on_delete=models.CASCADE,
-                               related_name='client')
+                               related_name='client',
+                               blank = True)
     created = models.DateField(default = timezone.now)
-    due = models.DateField(blank=True)
+    due = models.DateField(default = timezone.now, blank=True)
     slug = models.SlugField(max_length=255, blank=True)
     status = models.CharField(max_length=2,
                               choices=Status.choices,

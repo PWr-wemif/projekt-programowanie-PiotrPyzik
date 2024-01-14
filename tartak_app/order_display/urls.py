@@ -12,4 +12,5 @@ urlpatterns = [
     path('finnish_element/<slug:element>', views.finnish_element, name='finnish_element'),
     path('finnish_order/<slug:order>', views.finnish_order, name='finnish_order'),
     path('archiwum/', views.Archive.as_view(), name ="archiwum"),
+    path('brudnopis/', views.Draft.as_view(), name ="brudnopis"),
 ]

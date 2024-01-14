@@ -10,4 +10,5 @@ def order_list(request):
 
 def order_detail(request, order):
     order = Order.objects.get(slug = order)
-    return render(request, 'worker_app/order_detail.html', {'order':order})
+    elements = order.element.all()
+    return render(request, 'worker_app/order_detail.html', {'order':order, 'elements':elements})

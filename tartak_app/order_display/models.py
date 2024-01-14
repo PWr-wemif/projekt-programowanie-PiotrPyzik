@@ -24,7 +24,10 @@ class Client(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            next_id = Client.objects.order_by('-pk').first().pk + 1
+            if not Client.objects.all():
+                next_id = 1
+            else:
+                next_id = Client.objects.order_by('-pk').first().pk + 1
             self.slug = slugify(unidecode(f"{next_id}_{self.first_name}_{self.last_name}"))
         super(Client, self).save(*args, **kwargs)
 
@@ -40,7 +43,7 @@ class Order(models.Model):
         FINISHED = 'FI', 'Finished'
     client = models.ForeignKey(Client,
                                on_delete=models.CASCADE,
-                               related_name='client',
+                               related_name='order',
                                blank = True)
     created = models.DateField(default = timezone.now)
     due = models.DateField(default = timezone.now, blank=True)

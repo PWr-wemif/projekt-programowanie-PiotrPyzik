@@ -8,11 +8,11 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 
+
 class OrderListView(LoginRequiredMixin, ListView):
     login_url = '/login/'
     queryset = Order.published.all()
     context_object_name = 'orders'
-    paginate_by = 3
     template_name = 'order_display/order_list.html'
 
 @login_required(login_url='/login/')   
@@ -69,14 +69,18 @@ def new_order(request):
             order = form.save(commit=False)
             client = client_form.save(commit=False)
             if client.first_name or client.last_name or client.phone_number:
-                client.save()
-                order.client = client
+                exists = Client.objects.filter(first_name = client.first_name).filter(last_name=client.last_name)
+                if exists:
+                    order.client = exists[0]
+                else:
+                    client.save()
+                    order.client = client
                 print(order.client)
             order.save()
             return redirect(order.get_absolute_url())
         else:
             if client_form.is_valid():
-                print('chuj')
+                print('cos nie tak')
             messages.error(request, "coś poszło nie tak")
             return render(request, 'order_display/new_order.html', {'form': form, "client_form":client_form})
     form = OrderForm()
@@ -117,6 +121,12 @@ def finnish_order(request, order):
 class Archive(LoginRequiredMixin, ListView):
     login_url = '/login/'
     queryset = Order.objects.filter(status = Order.Status.FINISHED)
+    context_object_name = 'orders'
+    template_name = 'order_display/order_list.html'
+
+class Draft(LoginRequiredMixin, ListView):
+    login_url = '/login/'
+    queryset = Order.objects.filter(status = Order.Status.DRAFT)
     context_object_name = 'orders'
     template_name = 'order_display/order_list.html'
     

@@ -39,9 +39,11 @@
                 <tbody>
                   {% for element in elements %}
                   <tr>
-                    <td>{{element.name}}</td>
-                    <td>{{element.width}}x{{element.height}}x{{element.length}}</td>
-                    <td>{{element.volume}}m3</td>
+                    {% if element.status == element.Status.IN_PROGRESS %}
+                      <td>{{element.name}}</td>
+                      <td>{{element.width}}x{{element.height}}x{{element.length}}</td>
+                      <td>{{element.volume}}m3</td>
+                    {% endif %}
                   </tr>
                   {% endfor %}
                 </tbody>
